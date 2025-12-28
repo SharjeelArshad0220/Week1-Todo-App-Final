@@ -1,4 +1,5 @@
-let allTasks = [];
+let allTasks = JSON.parse(localStorage.getItem("tasks")) || [];
+renderTasks();
 function getTask(){
   const title = document.getElementById('title-input').value;
   const date = document.getElementById('date-input').value;
@@ -37,6 +38,7 @@ const high= document.getElementById('high-list');
     </div>
     <div class="task-actions">
       <button onclick="toggleTask(${task.id})">${task.isCompleted?'undo':'Done'}</button>
+      <button onclick="editTask(${task.id})" class="edit-btn">✏️</button>
       <button   class ="btn-delete" onclick="deleteTask(${task.id})">Delete</button>
     </div>
   </div>
@@ -61,3 +63,16 @@ function deleteTask(id){
    allTasks=allTasks.filter(task=>task.id!==id);
    renderTasks();
    }
+function editTask(id) {
+    const task = allTasks.find(t => t.id === id);
+    const newTitle = prompt("Edit Task Name:", task.title);
+    
+    if (newTitle) {
+        task.title = newTitle; // Naam update
+        saveTasks(); // Save
+        renderTasks(); // Screen refresh
+    }
+}
+function saveTasks() {
+    localStorage.setItem('tasks', JSON.stringify(allTasks));
+}
